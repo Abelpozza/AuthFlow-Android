@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.abel.anothertest.components.CustomTextField
 
 @Composable
 fun SignInScreen(
@@ -30,18 +31,19 @@ fun SignInScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        OutlinedTextField(
+        CustomTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email ou Usuário") }
+            label = "Email ou Usuário"
         )
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        OutlinedTextField(
+       CustomTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Senha") }
+            label = "Senha",
+           isPassword = true
         )
 
         Spacer(modifier = Modifier.height(20.dp))
