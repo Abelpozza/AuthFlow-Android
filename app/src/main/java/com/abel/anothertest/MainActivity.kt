@@ -18,6 +18,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.*
 import com.abel.anothertest.ui.theme.AnotherTestTheme
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.*
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.material.icons.Icons
+import com.abel.anothertest.UIapp.navigation.AppNavigation
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,72 +41,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-@Composable
-fun AppNavigation(modifier: Modifier = Modifier) {
-
-    val navController = rememberNavController()
-
-    NavHost(
-        navController = navController,
-        startDestination = "main",
-        modifier = modifier
-    ) {
-
-        composable("main") {
-            MainScreen(
-                onSignInClick = { navController.navigate("signIn") },
-                onSignUpClick = { navController.navigate("signUp") }
-            )
-        }
-
-        composable("signIn") {
-            SignInScreen(
-                onBack = { navController.popBackStack() }
-            )
-        }
-
-        composable("signUp") {
-            SignUpScreen(
-                onBack = { navController.popBackStack() }
-            )
-        }
-    }
-}
-
-@Composable
-fun MainScreen(
-    onSignInClick: () -> Unit,
-    onSignUpClick: () -> Unit
-) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Text(
-            text = "Bem vindo",
-            fontSize = 24.sp
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Button(onClick = onSignInClick) {
-            Text("Login")
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Button(onClick = onSignUpClick) {
-            Text("Criar Conta")
-        }
-    }
-}
-
 @Composable
 fun SignInScreen(
     onBack: () -> Unit

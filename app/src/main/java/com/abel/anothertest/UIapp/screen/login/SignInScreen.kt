@@ -1,68 +1,59 @@
-package com.abel.anothertest.UIapp.screen.login
+package com.abel.anothertest.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-
 
 @Composable
 fun SignInScreen(
     onBack: () -> Unit
-){
-
-    var email by remember {mutableStateOf("") }
-    var password by remember {mutableStateOf("") }
-
-Column(
-    modifier = Modifier
-    .fillMaxSize()
-    .padding(20.dp),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally
 ) {
-    Text("Login", fontSize = 24.sp)
 
-    Spacer(modifier = Modifier.height(20.dp))
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
-    OutlinedTextField(
-        value = email,
-        onValueChange = { email = it },
-        label = { Text("Email") }
-    )
-    Spacer(modifier = Modifier.height(10.dp))
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.LightGray),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
-    OutlinedTextField(
-        value = password,
-        onValueChange = { password = it },
-        label = { Text("Senha") }
-    )
+        Text("Login", fontSize = 22.sp)
 
-    Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-    Button(onClick = {}) {
-        Text("Entrar")
-    }
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email ou Usuário") }
+        )
 
-    Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-    Button(onClick = onBack) {
-        Text("Voltar")
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Senha") }
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(onClick = { }) {
+            Text("Entrar")
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(onClick = onBack) {
+            Text("Voltar")
         }
     }
 }
