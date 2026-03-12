@@ -13,6 +13,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.vector.ImageVector
 
+
 @Composable
 fun CustomTextField(
     value: String,
@@ -28,12 +29,11 @@ fun CustomTextField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-
         label = { Text(label) },
-
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp),
+
 
         isError = isError,
 
@@ -75,3 +75,5 @@ fun CustomTextField(
                 VisualTransformation.None
     )
 }
+
+

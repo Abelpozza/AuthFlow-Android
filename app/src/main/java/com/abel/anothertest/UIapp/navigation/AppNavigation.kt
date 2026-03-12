@@ -6,8 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.abel.anothertest.SignInScreen
-import com.abel.anothertest.SignUpScreen
 import com.abel.anothertest.UIapp.screen.login.MainScreen
+import com.abel.anothertest.screens.SignUpScreen
 
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier) {
@@ -35,7 +35,10 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
         composable("signUp") {
             SignUpScreen(
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onSignUpSuccess = {
+                    navController.navigate("main")
+                }
             )
         }
     }

@@ -10,10 +10,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abel.anothertest.components.CustomTextField
+import com.google.firebase.auth.FirebaseAuth
+import android.util.Log
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import kotlinx.coroutines.launch
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 
 @Composable
 fun SignUpScreen(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onSignUpSuccess: () -> Unit
 ) {
 
     var username by remember { mutableStateOf("") }
@@ -21,10 +30,18 @@ fun SignUpScreen(
     var cpf by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    val auth = FirebaseAuth.getInstance()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
-    Column(
+    Scaffold (
+        snackbarHost = {SnackbarHost(snackbarHostState)}
+    ) { paddingValues ->
+
+        Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(paddingValues)
             .background(Color.LightGray),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -37,7 +54,8 @@ fun SignUpScreen(
         CustomTextField(
             value = username,
             onValueChange = { username = it },
-            label = "Nome"
+            label = "Nome",
+            icon = Icons.Default.Person
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -45,7 +63,9 @@ fun SignUpScreen(
         CustomTextField(
             value = email,
             onValueChange = { email = it },
-            label = "Email"
+            label = "Email",
+            icon = Icons.Default.Email
+
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -54,7 +74,8 @@ fun SignUpScreen(
             value = cpf,
             onValueChange = { cpf = it },
             label = "CPF",
-            isError = cpf.length < 11
+            isError = cpf.length < 11,
+            icon = Icons.Default.AccountBox
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -62,7 +83,9 @@ fun SignUpScreen(
         CustomTextField(
             value = password,
             onValueChange = { password = it },
-            label = "Senha"
+            label = "Senha",
+            isPassword = true,
+            icon = Icons.Default.Lock
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -70,13 +93,50 @@ fun SignUpScreen(
         CustomTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
-            label = "Confirmar Senha"
+            label = "Confirmar Senha",
+            isPassword = true,
+            icon = Icons.Default.Lock
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Button(onClick = { }) {
-            Text("Criar Conta")
+            Button(onClick = {
+
+                if (email.isBlank()) {
+                    Log.d("SignUp", "Email vazio")
+                    return@Button
+                }
+
+                if (password.length < 6) {
+                    Log.d("SignUp", "Senha precisa ter 6 caracteres")
+                    return@Button
+                }
+
+                if (password != confirmPassword) {
+                    Log.d("SignUp", "Senhas não coincidem")
+                    return@Button
+                }
+
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+
+                        if (task.isSuccessful) {
+                            Log.d("SignUp", "Conta criada com sucesso!")
+                            onSignUpSuccess()
+                        } else {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    task.exception?.message ?: "Erro ao criar conta"
+                                )
+                            }
+                        }
+
+                    }
+
+            }) {
+                Text("Criar Conta")
+            }
+
         }
 
         Spacer(modifier = Modifier.height(10.dp))
