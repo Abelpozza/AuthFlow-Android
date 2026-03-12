@@ -11,13 +11,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abel.anothertest.components.CustomTextField
 import com.google.firebase.auth.FirebaseAuth
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import kotlinx.coroutines.launch
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun SignUpScreen(
@@ -31,6 +31,7 @@ fun SignUpScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     val auth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -101,36 +102,42 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
             Button(onClick = {
-
-                if (email.isBlank()) {
-                    Log.d("SignUp", "Email vazio")
-                    return@Button
-                }
-
-                if (password.length < 6) {
-                    Log.d("SignUp", "Senha precisa ter 6 caracteres")
-                    return@Button
-                }
-
-                if (password != confirmPassword) {
-                    Log.d("SignUp", "Senhas não coincidem")
-                    return@Button
-                }
+                data class User(
+                    val uid: String = "",
+                    val nome: String = "",
+                    val email: String = "",
+                    val cpf: String = ""
+                )
 
                 auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
 
                         if (task.isSuccessful) {
-                            Log.d("SignUp", "Conta criada com sucesso!")
+
+                            val uid = auth.currentUser?.uid
+
+                            val user = User(
+                                uid = uid!!,
+                                nome = username,
+                                email = email,
+                                cpf = cpf
+                            )
+
+                            db.collection("users")
+                                .document(uid)
+                                .set(user)
+
                             onSignUpSuccess()
+
                         } else {
+
                             scope.launch {
                                 snackbarHostState.showSnackbar(
                                     task.exception?.message ?: "Erro ao criar conta"
                                 )
                             }
-                        }
 
+                        }
                     }
 
             }) {
